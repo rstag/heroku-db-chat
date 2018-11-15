@@ -57,6 +57,13 @@ const arr = [{
 //     }
 // })
 
+app.get('/', (req, res) => {
+    
+    res.send(arr);
+    console.log(arr[1].name);
+
+});
+
 app.get('/emp', (req, res) => {
     
             res.send(arr);
