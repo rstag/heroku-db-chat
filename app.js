@@ -5,6 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
+const port = process.env.PORT || 3000;
 
 const arr = [{
     "id": 0,
@@ -142,4 +143,7 @@ app.post('/newEmployee', (req, res) => {
     // });
 });
 
-app.listen('3000', () => console.log('server started'));
+// app.listen('3000', () => console.log('server started'));
+app.listen(port, () =>
+    console.log(`Example app listening on port ${port}!`)
+);
