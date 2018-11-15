@@ -156,7 +156,7 @@ app.post('/newEmployee', (req, res) => {
             res.redirect('/');
         }
     });
-    res.redirect('/');
+    // res.redirect('/');
 });
 
 // app.listen('3000', () => console.log('server started'));
