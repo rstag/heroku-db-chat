@@ -1,4 +1,4 @@
-// const mysql = require('mysql');
+const mysql = require('mysql');
 const express = require('express');
 
 const app = express();
@@ -39,48 +39,54 @@ const arr = [{
     "address": "cst"
 }];
 
-// const mysqlConn = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '',
-//     database: 'carsdb',
-//     multipleStatements: true
-// });
+const mysqlConn = mysql.createConnection({
+    host: 'sql12.freemysqlhosting.net',
+    user: 'sql12265630',
+    password: 'N2v67jMxDA',
+    database: 'sql12265630',
+    multipleStatements: true
+});
 
-// mysqlConn.connect((err) => {
-//     if (err) {
-//         console.log("err" + JSON.stringify(err, undefined, 2));
+mysqlConn.connect((err) => {
+    if (err) {
+        console.log("err" + JSON.stringify(err, undefined, 2));
 
-//     } else {
-//         console.log("connected db");
+    } else {
+        console.log("connected db");
 
-//     }
-// })
+    }
+})
 
 app.get('/', (req, res) => {
-    
-    res.send(arr);
-    console.log(arr[1].name);
+    mysqlConn.query('select * from ftable', (err, rows, fields) => {
+        if (!err) {
+            res.send(rows);
+            console.log(rows[0].name);
+        } else {
+            console.log(err);
+            // res.redirect('/');
+        }
+    });
 
 });
 
 app.get('/emp', (req, res) => {
     
-            res.send(arr);
-            console.log(arr[1].name);
+            // res.send(arr);
+            // console.log(arr[1].name);
         
 });
 
 app.get('/employee', (req, res) => {
-    // mysqlConn.query('select * from employees', (err, rows, fields) => {
-    //     if (!err) {
-    //         res.send(rows);
-    //         console.log(rows[0].name);
-    //     } else {
-    //         console.log(err);
-    //         // res.redirect('/');
-    //     }
-    // });
+    mysqlConn.query('select * from ftable', (err, rows, fields) => {
+        if (!err) {
+            res.send(rows);
+            console.log(rows[0].name);
+        } else {
+            console.log(err);
+            // res.redirect('/');
+        }
+    });
 });
 
 app.get('/employee/:id', (req, res) => {
