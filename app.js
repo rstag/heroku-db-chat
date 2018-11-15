@@ -90,28 +90,28 @@ app.get('/employee', (req, res) => {
 });
 
 app.get('/employee/:id', (req, res) => {
-    // mysqlConn.query('select * from employees where id = ?',[req.params.id], (err, rows, fields) => {
-    //     if (!err) {
-    //         res.send(rows);
-    //         // console.log(rows[0].name);
-    //     } else {
-    //         console.log(err);
-    //         // res.redirect('/');
-    //     }
-    // });
+    mysqlConn.query('select * from ftable where id = ?',[req.params.id], (err, rows, fields) => {
+        if (!err) {
+            res.send(rows);
+            // console.log(rows[0].name);
+        } else {
+            console.log(err);
+            // res.redirect('/');
+        }
+    });
 });
 
 app.delete('/employee/:id', (req, res) => {
-//     mysqlConn.query('delete from employees where id = ?',[req.params.id], (err, rows, fields) => {
-//         if (!err) {
-//             // res.send(rows);
-//             console.log('deleted');
-//             // console.log(rows[0].name);
-//         } else {
-//             console.log(err);
-//             // res.redirect('/');
-//         }
-//     });
+    mysqlConn.query('delete from employees where id = ?',[req.params.id], (err, rows, fields) => {
+        if (!err) {
+            // res.send(rows);
+            console.log('deleted');
+            // console.log(rows[0].name);
+        } else {
+            console.log(err);
+            // res.redirect('/');
+        }
+    });
 });
 
 app.post('/employee', (req, res) => {
@@ -144,19 +144,19 @@ app.put('/employee', (req, res) => {
 
 app.post('/newEmployee', (req, res) => {
     let emp = req.body;
-    // let sql="insert into employees values(?,?,?,?);";
-    // mysqlConn.query(sql,[emp.id,emp.name,emp.salery,emp.address], (err, rows, fields) => {
-    //     if (!err) {
-    //         res.send(rows);
-    //         // console.log(rows[0].name);
-    //     } else {
-    //         console.log(err);
-    //         // res.redirect('/');
-    //     }
-    // });
+    let sql="insert into ftable values(?,?,?,?);";
+    mysqlConn.query(sql,[emp.id,emp.name,emp.salery,emp.address], (err, rows, fields) => {
+        if (!err) {
+            res.send(rows);
+            // console.log(rows[0].name);
+        } else {
+            console.log(err);
+            // res.redirect('/');
+        }
+    });
 });
 
 // app.listen('3000', () => console.log('server started'));
 app.listen(port, () =>
-    console.log(`Example app listening on port ${port}!`)
+    console.log(`server started on port ${port}!`)
 );
