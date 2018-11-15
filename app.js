@@ -5,6 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000;
 
 const arr = [{
@@ -144,6 +145,7 @@ app.put('/employee', (req, res) => {
 
 app.post('/newEmployee', (req, res) => {
     let emp = req.body;
+    console.log(emp);
     let sql="insert into ftable values(?,?,?,?);";
     mysqlConn.query(sql,[emp.id,emp.name,emp.salery,emp.address], (err, rows, fields) => {
         if (!err) {
@@ -151,9 +153,10 @@ app.post('/newEmployee', (req, res) => {
             // console.log(rows[0].name);
         } else {
             console.log(err);
-            // res.redirect('/');
+            res.redirect('/');
         }
     });
+    res.redirect('/');
 });
 
 // app.listen('3000', () => console.log('server started'));
