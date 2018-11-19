@@ -5,14 +5,12 @@ const app = express();
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000;
 
 const arr = [{
@@ -48,10 +46,10 @@ const arr = [{
 }];
 
 const mysqlConn = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
+    host: 'sql12.freemysqlhosting.net',
+    user: 'sql12265630',
+    password: 'N2v67jMxDA',
+    database: 'sql12265630',
     multipleStatements: true
 });
 
@@ -70,7 +68,7 @@ app.get('/', (req, res) => {
         if (!err) {
             // res.header("Access-Control-Allow-Origin", "*");
             res.send(rows);
-
+            
         } else {
             console.log(err);
             // res.redirect('/');
@@ -80,17 +78,17 @@ app.get('/', (req, res) => {
 });
 
 app.get('/emp', (req, res) => {
-
-    // res.send(arr);
-    // console.log(arr[1].name);
-
+    
+            // res.send(arr);
+            // console.log(arr[1].name);
+        
 });
 
 app.get('/employee', (req, res) => {
     mysqlConn.query('select * from ftable', (err, rows, fields) => {
         if (!err) {
             res.send(rows);
-
+            
         } else {
             console.log(err);
             res.redirect('/');
@@ -99,7 +97,7 @@ app.get('/employee', (req, res) => {
 });
 
 app.get('/employee/:id', (req, res) => {
-    mysqlConn.query('select * from ftable where id = ?', [req.params.id], (err, rows, fields) => {
+    mysqlConn.query('select * from ftable where id = ?',[req.params.id], (err, rows, fields) => {
         if (!err) {
             res.send(rows);
             // console.log(rows[0].name);
@@ -111,7 +109,7 @@ app.get('/employee/:id', (req, res) => {
 });
 
 app.delete('/employee/:id', (req, res) => {
-    mysqlConn.query('delete from employees where id = ?', [req.params.id], (err, rows, fields) => {
+    mysqlConn.query('delete from employees where id = ?',[req.params.id], (err, rows, fields) => {
         if (!err) {
             // res.send(rows);
             console.log('deleted');
@@ -154,8 +152,8 @@ app.put('/employee', (req, res) => {
 app.post('/newEmployee', (req, res) => {
     let emp = req.body;
     console.log(emp);
-    let sql = "insert into ftable values(?,?,?,?);";
-    mysqlConn.query(sql, [emp.id, emp.name, emp.salery, emp.address], (err, rows, fields) => {
+    let sql="insert into ftable values(?,?,?,?);";
+    mysqlConn.query(sql,[emp.id,emp.name,emp.salery,emp.address], (err, rows, fields) => {
         if (!err) {
             res.send(rows);
         } else {
