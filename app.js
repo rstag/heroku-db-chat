@@ -33,7 +33,8 @@ mysqlConn.connect((err) => {
     }
 })
 
-app.use('register',require('./routes/register'))
+// app.use(require('./routes/register'));
+app.use('register',require('./routes/register'));
 
 app.listen(port, () =>
     console.log(`server started on port ${port}!`)
