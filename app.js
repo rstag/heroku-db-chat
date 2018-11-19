@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+
 const express = require('express');
 
 const app = express();
@@ -15,26 +15,9 @@ app.use(bodyParser.urlencoded({
 }));
 const port = process.env.PORT || 3000;
 
-const mysqlConn = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    multipleStatements: true
-});
 
-mysqlConn.connect((err) => {
-    if (err) {
-        console.log("err" + JSON.stringify(err, undefined, 2));
-
-    } else {
-        console.log("connected db");
-
-    }
-})
-
-// app.use(require('./routes/register'));
-app.use('register',require('./routes/register'));
+app.use(require('./routes/register'));
+app.use('/reg',require('./routes/register'));
 
 app.listen(port, () =>
     console.log(`server started on port ${port}!`)
