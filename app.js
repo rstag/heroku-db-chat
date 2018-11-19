@@ -15,38 +15,6 @@ app.use(bodyParser.urlencoded({
 }));
 const port = process.env.PORT || 3000;
 
-const arr = [{
-    "id": 0,
-    "name": "sdsad",
-    "salery": "125",
-    "address": "mumbai"
-}, {
-    "id": 1,
-    "name": "rs",
-    "salery": "33200",
-    "address": "airoli"
-}, {
-    "id": 2,
-    "name": "sdsad",
-    "salery": "12005",
-    "address": "mum"
-}, {
-    "id": 3,
-    "name": "svs",
-    "salery": "25000",
-    "address": "thane"
-}, {
-    "id": 4,
-    "name": "sdsad",
-    "salery": "12005",
-    "address": "mum"
-}, {
-    "id": 5,
-    "name": "sdsad",
-    "salery": "12005",
-    "address": "cst"
-}];
-
 const mysqlConn = mysql.createConnection({
     host: process.env.HOST,
     user: process.env.USER,
@@ -65,106 +33,7 @@ mysqlConn.connect((err) => {
     }
 })
 
-app.get('/', (req, res) => {
-    mysqlConn.query('select * from ftable', (err, rows, fields) => {
-        if (!err) {
-            // res.header("Access-Control-Allow-Origin", "*");
-            res.send(rows);
-
-        } else {
-            console.log(err);
-            // res.redirect('/');
-        }
-    });
-
-});
-
-app.get('/emp', (req, res) => {
-
-    // res.send(arr);
-    // console.log(arr[1].name);
-
-});
-
-app.get('/employee', (req, res) => {
-    mysqlConn.query('select * from ftable', (err, rows, fields) => {
-        if (!err) {
-            res.send(rows);
-
-        } else {
-            console.log(err);
-            res.redirect('/');
-        }
-    });
-});
-
-app.get('/employee/:id', (req, res) => {
-    mysqlConn.query('select * from ftable where id = ?', [req.params.id], (err, rows, fields) => {
-        if (!err) {
-            res.send(rows);
-            // console.log(rows[0].name);
-        } else {
-            console.log(err);
-            // res.redirect('/');
-        }
-    });
-});
-
-app.delete('/employee/:id', (req, res) => {
-    mysqlConn.query('delete from employees where id = ?', [req.params.id], (err, rows, fields) => {
-        if (!err) {
-            // res.send(rows);
-            console.log('deleted');
-            // console.log(rows[0].name);
-        } else {
-            console.log(err);
-            // res.redirect('/');
-        }
-    });
-});
-
-app.post('/employee', (req, res) => {
-    let emp = req.body;
-    // let sql="set @id = ?;set @name = ?;set @salery = ?;set @address = ?;call EmpAddEdit(@id,@name,@salery,@address);";
-    // mysqlConn.query(sql,[emp.id,emp.name,emp.salery,emp.address], (err, rows, fields) => {
-    //     if (!err) {
-    //         res.send(rows);
-    //         // console.log(rows[0].name);
-    //     } else {
-    //         console.log(err);
-    //         // res.redirect('/');
-    //     }
-    // });
-});
-
-app.put('/employee', (req, res) => {
-    let emp = req.body;
-    // let sql="set @id = ?;set @name = ?;set @salery = ?;set @address = ?;call EmpAddEdit(@id,@name,@salery,@address);";
-    // mysqlConn.query(sql,[emp.id,emp.name,emp.salery,emp.address], (err, rows, fields) => {
-    //     if (!err) {
-    //         res.send(rows);
-    //         // console.log(rows[0].name);
-    //     } else {
-    //         console.log(err);
-    //         // res.redirect('/');
-    //     }
-    // });
-});
-
-app.post('/newEmployee', (req, res) => {
-    let emp = req.body;
-    console.log(emp);
-    let sql = "insert into ftable values(?,?,?,?);";
-    mysqlConn.query(sql, [emp.id, emp.name, emp.salery, emp.address], (err, rows, fields) => {
-        if (!err) {
-            res.send(rows);
-        } else {
-            console.log(err);
-            res.redirect('/');
-        }
-    });
-    // res.redirect('/');
-});
+app.use('register',require('./routes/register'))
 
 app.listen(port, () =>
     console.log(`server started on port ${port}!`)
