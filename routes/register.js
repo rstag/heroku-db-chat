@@ -44,11 +44,13 @@ router.get('/', (req, res) => {
 router.post('/sendotp',(req,res)=>{
     sendOtp.send("919029923008", "rstag008", function (error, data) {
         console.log(data);
+        res.send(data);
       });
 })
 router.post('/retryotp',(req,res)=>{
     sendOtp.retry("919029923008", false, function (error, data) {
         console.log(data);
+        res.send(data);
       });
 })
 
@@ -57,6 +59,7 @@ router.post('/verifyotp',(req,res)=>{
         console.log(data); 
         if(data.type == 'success') console.log('OTP verified successfully')
         if(data.type == 'error') console.log('OTP verification failed')
+        res.send(data);
       });
 })
 
