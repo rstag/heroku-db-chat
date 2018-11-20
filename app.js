@@ -1,4 +1,3 @@
-
 const express = require('express');
 
 const app = express();
@@ -16,9 +15,16 @@ app.use(bodyParser.urlencoded({
 const port = process.env.PORT || 3000;
 
 
-app.use(require('./routes/register'));
-app.use('/reg',require('./routes/register'));
+// app.use(require('./routes/register'));
+app.use('/reg', require('./routes/register'));
+app.use('/user', require('./routes/users'));
+app.get('/', (req, res) => {
 
+    // console.log("hello")
+    res.send({
+        "test": "values test"
+    });
+});
 app.listen(port, () =>
     console.log(`server started on port ${port}!`)
 );

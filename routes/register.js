@@ -1,11 +1,11 @@
-
 const express = require('express');
 const mysql = require('mysql');
 
-const SendOtp=require('sendotp');
+const SendOtp = require('sendotp');
+
 const sendOtp = new SendOtp(process.env.SENDOTP);
 
-const router=express.Router();
+const router = express.Router();
 const mysqlConn = mysql.createConnection({
     host: process.env.HOST,
     user: process.env.USER,
@@ -13,6 +13,8 @@ const mysqlConn = mysql.createConnection({
     database: process.env.DATABASE,
     multipleStatements: true
 });
+
+
 
 
 mysqlConn.connect((err) => {
@@ -29,46 +31,43 @@ mysqlConn.connect((err) => {
 router.get('/', (req, res) => {
     mysqlConn.query('select * from ftable', (err, rows, fields) => {
         if (!err) {
-            // res.header("Access-Control-Allow-Origin", "*");
             res.send(rows);
-
         } else {
             console.log(err);
-            // res.redirect('/');
+            res.send({
+                "test": "values test"
+            });
         }
     });
-    // console.log("hello")
-    // res.send("rows");
 });
 
-router.post('/sendotp',(req,res)=>{
-    sendOtp.send("919029923008", "rstag008", function (error, data) {
+router.post('/sendotp', (req, res) => {
+    let user = req.body;
+    console.log(user)
+    sendOtp.send(user.phoneNo, "rstag008", function (error, data) {
         console.log(data);
         res.send(data);
-      });
+    });
 })
-router.post('/retryotp',(req,res)=>{
-    sendOtp.retry("919029923008", false, function (error, data) {
+router.post('/retryotp', (req, res) => {
+    let user = req.body;
+
+    sendOtp.retry(user.phoneNo, false, function (error, data) {
         console.log(data);
         res.send(data);
-      });
+    });
 })
 
-router.post('/verifyotp',(req,res)=>{
-    sendOtp.verify("919029923008", "1410", function (error, data) {
-        console.log(data); 
-        if(data.type == 'success') console.log('OTP verified successfully')
-        if(data.type == 'error') console.log('OTP verification failed')
+router.post('/verifyotp', (req, res) => {
+    let user = req.body;
+    sendOtp.verify(user.phoneNo, user.otp, function (error, data) {
+        console.log(data);
+        if (data.type == 'success') console.log('OTP verified successfully')
+        if (data.type == 'error') console.log('OTP verification failed')
         res.send(data);
-      });
+    });
 })
 
-router.get('/emp', (req, res) => {
-
-    // res.send(arr);
-    // console.log(arr[1].name);
-
-});
 
 router.get('/employee', (req, res) => {
     console.log("/empl")
@@ -83,49 +82,5 @@ router.get('/employee', (req, res) => {
     });
 });
 
-router.get('/employee/:id', (req, res) => {
-    mysqlConn.query('select * from ftable where id = ?', [req.params.id], (err, rows, fields) => {
-        if (!err) {
-            res.send(rows);
-            // console.log(rows[0].name);
-        } else {
-            console.log(err);
-            // res.redirect('/');
-        }
-    });
-});
 
-router.post('/delemployee/:id', (req, res) => {
-    mysqlConn.query('delete from employees where id = ?', [req.params.id], (err, rows, fields) => {
-        if (!err) {
-            // res.send(rows);
-            console.log('deleted');
-            // console.log(rows[0].name);
-        } else {
-            console.log(err);
-            // res.redirect('/');
-        }
-    });
-});
-
-router.post('/employee', (req, res) => {
-    let emp = req.body;
-   
-});
-
-router.post('/newEmployee', (req, res) => {
-    let emp = req.body;
-    console.log(emp);
-    let sql = "insert into ftable values(?,?,?,?);";
-    mysqlConn.query(sql, [emp.id, emp.name, emp.salery, emp.address], (err, rows, fields) => {
-        if (!err) {
-            res.send(rows);
-        } else {
-            console.log(err);
-            res.redirect('/');
-        }
-    });
-    // res.redirect('/');
-});
-
-module.exports=router;
+module.exports = router;
