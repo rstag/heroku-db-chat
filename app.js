@@ -20,7 +20,7 @@ app.use('/reg', require('./routes/register'));
 app.use('/user', require('./routes/users'));
 app.get('/', (req, res) => {
 
-    // console.log("hello")
+    
     res.send({
         "test": "values test"
     });

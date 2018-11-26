@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql');
+const crypto = require('crypto');
 
 const router = express.Router();
 const mysqlConn = mysql.createConnection({
@@ -9,8 +10,6 @@ const mysqlConn = mysql.createConnection({
     database: process.env.DATABASE,
     multipleStatements: true
 });
-
-
 
 
 mysqlConn.connect((err) => {
@@ -40,33 +39,39 @@ router.get('/', (req, res) => {
     // res.send("rows");
 });
 
-router.post('/sendotp', (req, res) => {
+router.post('/findByphoneno', (req, res) => {
+    let emp = req.body;
+    mysqlConn.query('select * from usersdb where phoneno = ?', [emp.phoneno], (err, rows, fields) => {
+        if (!err) {
+            res.send(rows);
 
-    res.send({
-        "test": "values test"
+        } else {
+            console.log(err);
+            res.send({
+                "test": "values test"
+            });
+
+        }
     });
 
 })
-router.post('/retryotp', (req, res) => {
+router.post('/findByuserid', (req, res) => {
+    let emp = req.body;
+    mysqlConn.query('select * from usersdb where userid = ?', [emp.userid], (err, rows, fields) => {
+        if (!err) {
+            res.send(rows);
 
-    res.send({
-        "test": "values test"
+        } else {
+            console.log(err);
+            res.send({
+                "test": "values test"
+            });
+
+        }
     });
 
 })
 
-router.post('/verifyotp', (req, res) => {
-    res.send({
-        "test": "values test"
-    });
-
-})
-
-router.get('/emp', (req, res) => {
-    res.send({
-        "test": "values test"
-    });
-});
 
 router.get('/employee', (req, res) => {
     console.log("/employee")
@@ -82,58 +87,90 @@ router.get('/employee', (req, res) => {
     });
 });
 
-router.get('/employee/:id', (req, res) => {
-    mysqlConn.query('select * from ftable where id = ?', [req.params.id], (err, rows, fields) => {
-        if (!err) {
-            res.send(rows);
-           
-        } else {
-            console.log(err);
-            res.send({
-                "test": "values test"
-            });
 
+function findUserId(userid) {
+
+    mysqlConn.query('select * from usersdb where userid = ?', [userid], (err, rows, fields) => {
+        if (!err) {
+
+            if (rows.length > 0)
+                return rows[0].userid;
+            return 0;
+        } else {
+            // console.log(err);
+            return 0;
         }
     });
-});
+}
 
-router.post('/delemployee/:id', (req, res) => {
-    mysqlConn.query('delete from employees where id = ?', [req.params.id], (err, rows, fields) => {
-        if (!err) {
-            // res.send(rows);
-            console.log('deleted');
-        } else {
-            console.log(err);
-            res.send({
-                "test": "values test"
-            });
-        }
-    });
-});
+function random(howMany, chars) {
+    chars = chars ||
+        'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
+    let rnd = crypto.randomBytes(howMany),
+        value = new Array(howMany),
+        len = Math.min(256, chars.length),
+        d = 256 / len
 
-router.post('/employee', (req, res) => {
-    let emp = req.body;
-    res.send({
-        "test": "values test"
-    });
-});
+    for (let i = 0; i < howMany; i++) {
+        value[i] = chars[Math.floor(rnd[i] / d)]
+    };
+
+    return value.join('');
+}
+
+const findPhoneno = (phoneno) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+        let pn;
+
+        mysqlConn.query('select * from usersdb where phoneno = ?', [phoneno], (err, rows, fields) => {
+            if (!err) {
+
+                if (rows.length > 0) {
+                    pn = rows[0].phoneno;
+                }
+                resolve(pn)
+            } else {
+                console.log(err);
+                pn = err;
+                //    return pn
+            }
+        });
+
+    }, 3000)
+})
 
 router.post('/newEmployee', (req, res) => {
     let emp = req.body;
-    console.log(emp);
+    findPhoneno(emp.phoneno).then((butter) => {
 
-    let sql = "insert into usersdb (username,userid,phoneno) values(?,?,?);";
-    mysqlConn.query(sql, [emp.username, emp.userid, emp.phoneno], (err, rows, fields) => {
-        if (!err) {
-            console.log(rows.insertId);
-            res.send(rows);
-        } else {
-            console.log(err.sqlMessage);
-            // console.log(err);
+        if (butter == emp.phoneno) {
+
             res.send({
-                "test": "values test"
+                "test": "phone already exists"
+            });
+        } else {
+            let t; {
+                t = random(16);
+                console.log(t);
+            }
+            while (t == findUserId(t));
+            emp.userid = t;
+
+            let sql = "insert into usersdb (username,userid,phoneno) values(?,?,?);";
+            mysqlConn.query(sql, [emp.username, emp.userid, emp.phoneno], (err, rows, fields) => {
+                if (!err) {
+                    console.log(rows.insertId);
+                    res.send(rows);
+                } else {
+                    console.log(err.sqlMessage);
+
+                    res.send({
+                        "test": "values test"
+                    });
+                }
             });
         }
+        return butter;
     });
 });
 
