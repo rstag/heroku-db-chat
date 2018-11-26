@@ -18,6 +18,7 @@ const port = process.env.PORT || 3000;
 // app.use(require('./routes/register'));
 app.use('/reg', require('./routes/register'));
 app.use('/user', require('./routes/users'));
+app.use('/msg', require('./routes/messages'));
 app.get('/', (req, res) => {
 
     
