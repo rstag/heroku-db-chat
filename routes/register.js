@@ -3,17 +3,26 @@ const mysql = require('mysql');
 
 const SendOtp = require('sendotp');
 
-const sendOtp = new SendOtp(process.env.SENDOTP);
+const sendOtp = new SendOtp('225381A8G6vDBo5b44d0ff');
+
+// const sendOtp = new SendOtp(process.env.SENDOTP);
 
 const router = express.Router();
+// const mysqlConn = mysql.createConnection({
+//     host: process.env.HOST,
+//     user: process.env.USER,
+//     password: process.env.PASSWORD,
+//     database: process.env.DATABASE,
+//     multipleStatements: true
+// });
+
 const mysqlConn = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
+    host: 'sql12.freemysqlhosting.net',
+    user: 'sql12265630',
+    password: 'N2v67jMxDA',
+    database: 'sql12265630',
     multipleStatements: true
 });
-
 
 
 
